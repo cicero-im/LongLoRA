@@ -17,13 +17,12 @@ import os
 import math
 import torch
 import argparse
-import random
 import numpy as np
-from numpy import random
 from tqdm import tqdm
 import transformers
 from peft import PeftModel
 from llama_attn_replace import replace_llama_attn
+import secrets
 
 
 def parse_config():
@@ -42,9 +41,9 @@ def parse_config():
 
 def generate_prompt_landmark(n_garbage, seed):
     """Generates a text file and inserts an passkey at a random position."""
-    rnd_state = random.get_state()
-    random.seed(seed)
-    n_garbage_prefix = random.randint(0, n_garbage)
+    rnd_state = secrets.SystemRandom().get_state()
+    secrets.SystemRandom().seed(seed)
+    n_garbage_prefix = secrets.SystemRandom().randint(0, n_garbage)
     n_garbage_suffix = n_garbage - n_garbage_prefix
 
     task_description = "There is an important info hidden inside a lot of irrelevant text. Find it and memorize them. I will quiz you about the important information there."
@@ -53,7 +52,7 @@ def generate_prompt_landmark(n_garbage, seed):
     assert len(garbage_inf) >= n_garbage
     garbage_prefix = garbage_inf[:n_garbage_prefix]
     garbage_suffix = garbage_inf[:n_garbage_suffix]
-    pass_key = random.randint(1, 50000)
+    pass_key = secrets.SystemRandom().randint(1, 50000)
     information_line = f"The pass key is {pass_key}. Remember it. {pass_key} is the pass key."
     final_question = "What is the pass key? The pass key is"
     lines = [
@@ -63,7 +62,7 @@ def generate_prompt_landmark(n_garbage, seed):
         garbage_suffix,
         final_question,
     ]
-    random.set_state(rnd_state)
+    secrets.SystemRandom().set_state(rnd_state)
     return "\n".join(lines), str(pass_key)
 
 

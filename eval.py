@@ -17,12 +17,12 @@ import os
 import math
 import torch
 import argparse
-import random
 import numpy as np
 from tqdm import tqdm
 import transformers
 from peft import PeftModel
 from llama_attn_replace import replace_llama_attn
+import secrets
 
 def parse_config():
     parser = argparse.ArgumentParser(description='arg parser')
@@ -117,7 +117,7 @@ def main(args):
     torch.cuda.set_device(device)
 
     torch.manual_seed(seed)
-    random.seed(seed)
+    secrets.SystemRandom().seed(seed)
     np.random.seed(seed)
 
     data = {'val': np.memmap(args.data_path, dtype=np.uint16, mode='r')}

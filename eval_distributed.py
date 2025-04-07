@@ -18,7 +18,6 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 import math
-import random
 import transformers
 from peft import PeftModel
 
@@ -41,6 +40,7 @@ from tqdm import tqdm
 
 import numpy as np
 import torch
+import secrets
 
 
 class Pg19Dataset(Dataset):
@@ -193,7 +193,7 @@ def run_eval(args: EvalArguments):
 
     seed = 2
     torch.manual_seed(seed)
-    random.seed(seed)
+    secrets.SystemRandom().seed(seed)
     np.random.seed(seed)
 
     dataset = Pg19Dataset(args.data_path, seq_length=args.seq_len, sliding_window=256)
